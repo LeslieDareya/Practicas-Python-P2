@@ -31,7 +31,7 @@ class Principal():
         b1.grid(row=6, column=1, pady=10)
         b2 = Button(self.ven,text="Mayor", command=self.mayor)
         b2.grid(row=6, column=2)
-        b3 = Button(self.ven,text="Menor")
+        b3 = Button(self.ven,text="Menor", command=self.menor)
         b3.grid(row=6, column=3, padx=10)
         b4 = Button(self.ven,text="Salir", command=self.salir)
         b4.grid(row=6, column=4, padx=25)
@@ -46,27 +46,24 @@ class Principal():
 
     def mayor(self):
         if len(self.lista) > 0:
-            #for i in self.lista:
-            if self.aux1 < self.lista[self.cont]:
-                self.aux1 = self.lista[self.cont]
-            self.cont += 1
-            if len(self.lista)-1 <= self.cont:
-                print(f'el mayor es{self.aux1}')
-                messagebox.showerror('El mayor es', self.aux1)
-                self.cont = 0
-            else:
-                return self.mayor()
+            self.aux1 = self.lista[0]  # inicializa
+            for i in self.lista:
+                if i > self.aux1:
+                    self.aux1 = i
+            print(f'el mayor es {self.aux1}')
+            messagebox.showinfo('El mayor es', f'{self.aux1}')
         else:
             print("Lista vacia")
             messagebox.showerror("Error","La lista esta vacia")
 
     def menor(self):
         if len(self.lista) > 0:
+            self.aux2 = self.lista[0]  # inicializa
             for i in self.lista:
-                if self.aux2 > i:
+                if i < self.aux2:
                     self.aux2 = i
-            print(f'el menor es{self.aux2}')
-            messagebox.showerror('El mayor es', self.aux1)
+            print(f'el menor es {self.aux2}')
+            messagebox.showinfo('El menor es', f'{self.aux2}')
         else:
             messagebox.showerror("Error","La lista esta vacia")
 
@@ -77,7 +74,7 @@ class Principal():
             self.listview.insert(self.listview.size()+1,self.a)
             self.n1.delete(0,END)
             self.b = int(self.n2.get())
-            self.listview.insert(self.listview.size()+1,self.a)
+            self.listview.insert(self.listview.size()+1,self.b)
             self.lista.append(self.b)
             self.n2.delete(0,END)
             print(self.lista)
@@ -86,10 +83,11 @@ class Principal():
 
         except ValueError:
             messagebox.showerror("Error", "Algun dato no es un numero")
-            return self.agregar
+            return
 
     def salir(self):
         self.ven.destroy()
+
 
 if __name__ == "__main__":
     app = Principal()
