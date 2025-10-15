@@ -10,99 +10,70 @@
 #ingresar un nuevo registro y repite el proceso, valida, pide corregir si esta mal y si es correcto lo agrega al list box
 # con los datos concatenados y el label muestra 2. asi sicesivamente con todos los registros deseados
 
+# validarRepaso.py
+# Este archivo contiene todas las funciones de validación
+# This file contains all the validation functions
+
+# principal.py
+# Este archivo contiene la interfaz gráfica y usa las validaciones del otro archivo
+# This file contains the GUI and uses the validations from the other file
+
 from tkinter import *
 from tkinter import messagebox
+from validarRepaso import Validar  # Importamos la clase de validaciones / Import validation class
 
 class Principal():
     def __init__(self):
+        # Crear la ventana principal / Create the main window
         self.ventana = Tk()
-        self.ventana.title("Simulacro examen")
-        self.ventana.geometry("600x250")
+        self.ventana.geometry("400x200")
+
+        # Lista para almacenar todos los datos ingresados / List to store all input data
         self.lista = []
-        self.counter = 0
-        self.validado = False
+
+        # Instancia de la clase Validar / Instance of the Validar class
+        self.valid = Validar()
 
     def inicio(self):
-        # --- Título arriba ---
-        l1 = Label(self.ventana, text="Simulacro Examen", font=("Arial", 14, "bold"))
-        l1.grid(row=0, column=0, columnspan=5, pady=10)
+        # Etiqueta principal de la ventana / Main label of the window
+        Label(self.ventana, text="Programa de Python con TKInter").place(x=50, y=20)
 
-        # --- Cajas de texto en horizontal ---
-        self.n1 = Entry(self.ventana, width=15)
-        self.n1.grid(row=1, column=0, padx=5)
-        self.n2 = Entry(self.ventana, width=15)
-        self.n2.grid(row=1, column=1, padx=5)
-        self.n3 = Entry(self.ventana, width=15)
-        self.n3.grid(row=1, column=2, padx=5)
+        # Caja de texto para ingresar datos / Entry box to input data
+        self.dato = Entry(self.ventana)
+        self.dato.place(x=150, y=50, width=150)
 
-        # --- Label debajo de las cajas ---
-        Label(self.ventana, text="Elemento:").grid(row=2, column=0, pady=10, sticky=W)
-        self.elemento = Label(self.ventana, text="0.")
-        self.elemento.grid(row=2, column=1, pady=10, sticky=W)
+        # Botón que llama a la función ValidarDatos / Button that calls the ValidarDatos function
+        Button(self.ventana, text="Validar", command=self.ValidarDatos).place(x=150, y=90, width=150)
 
-        # --- Botones debajo del label ---
-        b1 = Button(self.ventana, text="Validar", width=12, command=self.agregar)
-        b1.grid(row=3, column=0, pady=10)
-        b2 = Button(self.ventana, text="Agregar", width=12, command=self.mayor)
-        b2.grid(row=3, column=1, pady=10)
+        # Label que mostrará los datos ingresados / Label to display the entered data
+        self.mostrar = Label(self.ventana, text="Ejemplo")
+        self.mostrar.place(x=20, y=150)
 
-        # --- Listbox a la derecha ---
-        self.listview = Listbox(self.ventana, height=10, width=25)
-        self.listview.grid(row=1, column=4, rowspan=3, padx=10, pady=5)
-
+        # Ciclo principal de la ventana / Main loop of the window
         self.ventana.mainloop()
 
-    def agregar(self):
-        campos = [self.n1, self.n2, self.n3]
+    def ValidarDatos(self):
+        # Obtener el valor de la caja de texto / Get the value from the entry box
+        val = self.dato.get()
 
-        def validar_campo(idx):
-            texto = campos[idx].get()
-            if idx == 0 and (texto == "" or not texto.isalpha() or not texto.islower()):
-                campos[idx].delete(0, END)
-                messagebox.showerror("Error", "Algún campo no es correcto.")
-                return False
-            elif idx == 1 and (texto == "" or not texto.isalpha() or not texto.isupper()):
-                campos[idx].delete(0, END)
-                messagebox.showerror("Error", "Algún campo no es correcto.")
-                return False
-            elif idx == 2 and (texto == "" or not texto.isdigit()):
-                campos[idx].delete(0, END)
-                messagebox.showerror("Error", "Algún campo no es correcto.")
-                return False
+        if val != "":
+            # Agregar a la lista y limpiar la caja de texto / Add to the list and clear the entry
+            self.lista.append(val)
+            self.dato.delete(0, END)
 
-            if idx + 1 < len(campos):
-                return validar_campo(idx + 1)
-            else:
-                return True
+            # Mostrar la lista en el label / Show the list in the label
+            self.mostrar.config(text=f'{self.lista}')
 
-        if validar_campo(0):
-            self.validado = True
-            messagebox.showinfo("Validación", "Los 3 campos están validados correctamente.")
+            # Llamar a la función de validación ASCII / Call the ASCII validation function
+            respuesta = self.valid.ValidarAscii(val)
+            messagebox.showinfo("Validar datos", f'El dato es: {respuesta}')
+
         else:
-            self.validado = False
+            # Mensaje de error si la caja está vacía / Error message if entry is empty
+            messagebox.showerror("Error", "Caja de texto vacía")
 
-    def mayor(self):
-        if not self.validado:
-            self.agregar()
-
-        if self.validado:
-            v1 = self.n1.get()
-            v2 = self.n2.get()
-            v3 = self.n3.get()
-            conjunto = f"{v1} {v2} {v3}"
-            self.listview.insert(END, conjunto)
-            self.lista.append(conjunto)
-            self.counter += 1
-            self.elemento.config(text=f"{self.counter}.")
-            self.n1.delete(0, END)
-            self.n2.delete(0, END)
-            self.n3.delete(0, END)
-            self.validado = False
-        else:
-            messagebox.showerror("No agregado", "No se pudo agregar: corrige los campos.")
-
+# Punto de entrada principal / Main entry point
 if __name__ == "__main__":
     app = Principal()
     app.inicio()
-
 
