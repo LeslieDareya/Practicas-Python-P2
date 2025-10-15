@@ -1,37 +1,69 @@
 from tkinter import * 
 from tkinter import messagebox
 
+# Función principal que crea la ventana
+# Main function that creates the window
 def Ventana():
+    # Función interna para revisar usuario y contraseña
+    # Inner function to check username and password
     def revisar():
-       try:
+        try:
+            # Se obtienen los valores escritos en las cajas de texto
+            # Get the values written in the text boxes
             u = str(us.get())
             p = str(pas.get())
 
+            # Validación del usuario y contraseña
+            # Validation of username and password
             if u == 'admin' and p == '12345':
-                messagebox.showinfo('Validacion','Usuario','Contraseña correcta')
+                # Si son correctos, muestra mensaje de éxito
+                # If correct, show success message
+                messagebox.showinfo('Validación', 'Usuario y contraseña correctos')
             else:
-                messagebox.showerror('Error','Usuario y/o contraseña incorrecta')
-       except ValueError:
-            messagebox.showerror('Error','Introduce datos')
+                # Si no coinciden, muestra mensaje de error
+                # If not matching, show error message
+                messagebox.showerror('Error', 'Usuario y/o contraseña incorrecta')
+
+        except ValueError:
+            # Si ocurre un error en los datos introducidos
+            # If an error occurs with the entered data
+            messagebox.showerror('Error', 'Introduce datos válidos')
        
-    ven = Tk() #Libreria
-    ven.title('Programa 1 con Ventanas')#Titulo de la ventana
-    ven.geometry('400x400') #Tamaño de la ventana
+    # Creación de la ventana principal
+    # Create the main window
+    ven = Tk()  # Tkinter library window instance
+    ven.title('Programa 1 con Ventanas')  # Título de la ventana / Window title
+    ven.geometry('400x400')  # Tamaño de la ventana / Window size
 
-    Label(ven, text='Usuario').pack(pady=10) #Texto
+    # Etiqueta (label) para el texto "Usuario"
+    # Label for the "User" text
+    Label(ven, text='Usuario').pack(pady=10)
 
+    # Caja de texto para ingresar el usuario
+    # Entry box to input the username
     us = Entry(ven)
-    us.pack(pady=3)#Caja de texto
+    us.pack(pady=3)
 
-    Label(ven, text='Contraseña').pack(pady=10) #Texto
+    # Etiqueta (label) para el texto "Contraseña"
+    # Label for the "Password" text
+    Label(ven, text='Contraseña').pack(pady=10)
 
-    pas = Entry(ven)
-    pas.pack(pady=3) #Caja de Texto
+    # Caja de texto para ingresar la contraseña
+    # Entry box to input the password
+    pas = Entry(ven, show='*')  # show='*' oculta la contraseña
+    pas.pack(pady=3)
 
-    boton = Button(ven,text='Aceptar',command=revisar).pack(pady=3) #Boton 
+    # Botón para ejecutar la función "revisar"
+    # Button to execute the "revisar" function
+    boton = Button(ven, text='Aceptar', command=revisar)
+    boton.pack(pady=3)
 
+    # Ciclo principal para mantener la ventana abierta
+    # Main loop to keep the window running
     ven.mainloop()
 
 
-if __name__=='main_':
+# Punto de entrada del programa
+# Program entry point
+if __name__ == '__main__':
     Ventana()
